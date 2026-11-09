@@ -10,11 +10,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import in.market.deltabrief.R;
 import in.market.deltabrief.ui.adapter.CardSwipeAdapter;
 import in.market.deltabrief.ui.viewmodel.BriefingViewModel;
+import in.market.deltabrief.util.SampleDataProvider;
 
 public class MainActivity extends AppCompatActivity {
 
     private BriefingViewModel viewModel;
     private CardSwipeAdapter adapter;
+    private boolean isSeeded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +32,12 @@ public class MainActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(BriefingViewModel.class);
         viewModel.getAllCards().observe(this, cards -> {
             if (cards != null) {
-                adapter.setCards(cards);
+                if (cards.isEmpty() && !isSeeded) {
+                    isSeeded = true;
+                    viewModel.insertCards(SampleDataProvider.getSampleCards());
+                } else {
+                    adapter.setCards(cards);
+                }
             }
         });
 
