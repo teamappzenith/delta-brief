@@ -21,20 +21,40 @@ public class BriefingCard {
         return cardId;
     }
 
+    public void setCardId(String cardId) {
+        this.cardId = cardId;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getSummaryText() {
         return summaryText;
     }
 
+    public void setSummaryText(String summaryText) {
+        this.summaryText = summaryText;
+    }
+
     public String getCategory() {
         return category;
     }
 
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     public long getTimestamp() {
         return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public boolean isBookmarked() {
