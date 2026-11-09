@@ -53,6 +53,17 @@ public class CardSwipeAdapter extends RecyclerView.Adapter<CardSwipeAdapter.Card
 
         holder.btnBookmark.setImageResource(card.isBookmarked() ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off);
 
+        // Color indicator strip based on category
+        if ("Equity".equalsIgnoreCase(card.getCategory())) {
+            holder.indicatorStrip.setBackgroundColor(android.graphics.Color.parseColor("#16A34A")); // Green
+        } else if ("Options".equalsIgnoreCase(card.getCategory())) {
+            holder.indicatorStrip.setBackgroundColor(android.graphics.Color.parseColor("#DC2626")); // Red
+        } else if ("Macro".equalsIgnoreCase(card.getCategory())) {
+            holder.indicatorStrip.setBackgroundColor(android.graphics.Color.parseColor("#0284C7")); // Blue
+        } else {
+            holder.indicatorStrip.setBackgroundColor(android.graphics.Color.parseColor("#9333EA")); // Purple
+        }
+
         holder.btnBookmark.setOnClickListener(v -> {
             if (bookmarkClickListener != null) {
                 bookmarkClickListener.onBookmarkClick(card);
@@ -68,6 +79,7 @@ public class CardSwipeAdapter extends RecyclerView.Adapter<CardSwipeAdapter.Card
     static class CardViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvSummary, tvCategory, tvTimestamp;
         ImageButton btnBookmark;
+        View indicatorStrip;
 
         public CardViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -76,6 +88,7 @@ public class CardSwipeAdapter extends RecyclerView.Adapter<CardSwipeAdapter.Card
             tvCategory = itemView.findViewById(R.id.tvCategory);
             tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
             btnBookmark = itemView.findViewById(R.id.btnBookmark);
+            indicatorStrip = itemView.findViewById(R.id.indicatorStrip);
         }
     }
 }

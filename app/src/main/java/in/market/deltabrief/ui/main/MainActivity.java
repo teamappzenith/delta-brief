@@ -7,16 +7,21 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.chip.ChipGroup;
 import in.market.deltabrief.R;
+import in.market.deltabrief.data.local.CardEntity;
 import in.market.deltabrief.ui.adapter.CardSwipeAdapter;
 import in.market.deltabrief.ui.viewmodel.BriefingViewModel;
-import in.market.deltabrief.util.SampleDataProvider;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private BriefingViewModel viewModel;
     private CardSwipeAdapter adapter;
-    private boolean isSeeded = false;
+    private List<CardEntity> allCardsList = new ArrayList<>();
+    private String currentCategoryFilter = "All";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,15 +34,27 @@ public class MainActivity extends AppCompatActivity {
         adapter = new CardSwipeAdapter();
         recyclerView.setAdapter(adapter);
 
+        ChipGroup chipGroup = findViewById(R.id.chipGroup);
+        chipGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.chipEquity) {
+                currentCategoryFilter = "Equity";
+            } else if (checkedId == R.id.chipOptions) {
+                currentCategoryFilter = "Options";
+            } else if (checkedId == R.id.chipMacro) {
+                currentCategoryFilter = "Macro";
+            } else if (checkedId == R.id.chipPostMarket) {
+                currentCategoryFilter = "Post-Market";
+            } else {
+                currentCategoryFilter = "All";
+            }
+            filterCards();
+        });
+
         viewModel = new ViewModelProvider(this).get(BriefingViewModel.class);
         viewModel.getAllCards().observe(this, cards -> {
             if (cards != null) {
-                if (cards.isEmpty() && !isSeeded) {
-                    isSeeded = true;
-                    viewModel.insertCards(SampleDataProvider.getSampleCards());
-                } else {
-                    adapter.setCards(cards);
-                }
+                allCardsList = cards;
+                filterCards();
             }
         });
 
@@ -61,5 +78,19 @@ public class MainActivity extends AppCompatActivity {
         };
 
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+    }
+
+    private void filterCards() {
+        if ("All".equals(currentCategoryFilter)) {
+            adapter.setCards(allCardsList);
+        } else {
+            List<CardEntity> filteredList = new ArrayList<>();
+            for (CardEntity card : allCardsList) {
+                if (currentCategoryFilter.equalsIgnoreCase(card.getCategory())) {
+                    filteredList.add(card);
+                }
+            }
+            adapter.setCards(filteredList);
+        }
     }
 }
