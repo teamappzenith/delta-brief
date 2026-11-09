@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import in.market.deltabrief.data.local.AppDatabase;
 import in.market.deltabrief.data.local.CardEntity;
 import in.market.deltabrief.data.repository.BriefingRepository;
+import in.market.deltabrief.util.SampleDataProvider;
 
 import java.util.List;
 
@@ -20,6 +21,9 @@ public class BriefingViewModel extends AndroidViewModel {
         AppDatabase database = AppDatabase.getInstance(application);
         repository = new BriefingRepository(database.cardDao());
         allCards = repository.getAllCards();
+
+        // Automatically load/seed static mock briefing cards on startup so UI renders them immediately
+        repository.insertCards(SampleDataProvider.getSampleCards());
     }
 
     public LiveData<List<CardEntity>> getAllCards() {
