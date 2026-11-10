@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="app_background">#0A0E17</color>
+    <color name="toolbar_background">#1E293B</color>
+    <color name="card_background">#121824</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#94A3B8</color>
+    <color name="divider_color">#334155</color>
+    <color name="slate_primary">#1E293B</color>
+    <color name="slate_dark">#0F172A</color>
+    <color name="slate_light">#0A0E17</color>
+    <color name="trading_blue">#0284C7</color>
+    <color name="trading_green">#16A34A</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>

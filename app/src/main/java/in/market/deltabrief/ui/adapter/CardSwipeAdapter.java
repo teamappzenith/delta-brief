@@ -1,33 +1,24 @@
 package in.market.deltabrief.ui.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import in.market.deltabrief.R;
 import in.market.deltabrief.data.local.CardEntity;
+import in.market.deltabrief.ui.main.DetailActivity;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class CardSwipeAdapter extends RecyclerView.Adapter<CardSwipeAdapter.CardViewHolder> {
 
     private List<CardEntity> cards = new ArrayList<>();
-    private OnBookmarkClickListener bookmarkClickListener;
-
-    public interface OnBookmarkClickListener {
-        void onBookmarkClick(CardEntity card);
-    }
-
-    public void setOnBookmarkClickListener(OnBookmarkClickListener listener) {
-        this.bookmarkClickListener = listener;
-    }
 
     public void setCards(List<CardEntity> cards) {
         this.cards = cards != null ? cards : new ArrayList<>();
@@ -46,28 +37,53 @@ public class CardSwipeAdapter extends RecyclerView.Adapter<CardSwipeAdapter.Card
         CardEntity card = cards.get(position);
         holder.tvTitle.setText(card.getTitle());
         holder.tvSummary.setText(card.getSummaryText());
-        holder.tvCategory.setText(card.getCategory());
         
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault());
-        holder.tvTimestamp.setText(sdf.format(new Date(card.getTimestamp())));
+        String session = card.getCategory();
+        holder.tvSessionBadge.setText(session != null ? session.toUpperCase(Locale.ROOT) : "SESSION");
 
-        holder.btnBookmark.setImageResource(card.isBookmarked() ? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off);
+        String bias = card.getBias() != null ? card.getBias().toUpperCase(Locale.ROOT) : "NEUTRAL";
+        holder.tvBiasTag.setText(bias);
 
-        // Color indicator strip based on category
-        if ("Equity".equalsIgnoreCase(card.getCategory())) {
+        // Indicator strip & Bias tag colors
+        if ("BULLISH".equalsIgnoreCase(bias)) {
             holder.indicatorStrip.setBackgroundColor(android.graphics.Color.parseColor("#16A34A")); // Green
-        } else if ("Options".equalsIgnoreCase(card.getCategory())) {
+            holder.tvBiasTag.setBackgroundColor(android.graphics.Color.parseColor("#16A34A"));
+        } else if ("BEARISH".equalsIgnoreCase(bias)) {
             holder.indicatorStrip.setBackgroundColor(android.graphics.Color.parseColor("#DC2626")); // Red
-        } else if ("Macro".equalsIgnoreCase(card.getCategory())) {
-            holder.indicatorStrip.setBackgroundColor(android.graphics.Color.parseColor("#0284C7")); // Blue
+            holder.tvBiasTag.setBackgroundColor(android.graphics.Color.parseColor("#DC2626"));
         } else {
-            holder.indicatorStrip.setBackgroundColor(android.graphics.Color.parseColor("#9333EA")); // Purple
+            holder.indicatorStrip.setBackgroundColor(android.graphics.Color.parseColor("#0284C7")); // Blue / Neutral
+            holder.tvBiasTag.setBackgroundColor(android.graphics.Color.parseColor("#0284C7"));
         }
 
-        holder.btnBookmark.setOnClickListener(v -> {
-            if (bookmarkClickListener != null) {
-                bookmarkClickListener.onBookmarkClick(card);
-            }
+        // Session badge color
+        if ("Pre-Market".equalsIgnoreCase(session)) {
+            holder.tvSessionBadge.setBackgroundColor(android.graphics.Color.parseColor("#0284C7"));
+        } else if ("Stabilized".equalsIgnoreCase(session)) {
+            holder.tvSessionBadge.setBackgroundColor(android.graphics.Color.parseColor("#16A34A"));
+        } else if ("Mid-Day".equalsIgnoreCase(session) || "Pre-Close".equalsIgnoreCase(session)) {
+            holder.tvSessionBadge.setBackgroundColor(android.graphics.Color.parseColor("#DC2626"));
+        } else {
+            holder.tvSessionBadge.setBackgroundColor(android.graphics.Color.parseColor("#9333EA"));
+        }
+
+        holder.tvReadTime.setText("⏱️ 45 sec read");
+
+        // Tapping card opens DetailActivity
+        holder.itemView.setOnClickListener(v -> {
+            Context context = v.getContext();
+            Intent intent = new Intent(context, DetailActivity.class);
+            intent.putExtra(DetailActivity.EXTRA_CARD_ID, card.getCardId());
+            intent.putExtra(DetailActivity.EXTRA_TITLE, card.getTitle());
+            intent.putExtra(DetailActivity.EXTRA_SUMMARY, card.getSummaryText());
+            intent.putExtra(DetailActivity.EXTRA_CATEGORY, card.getCategory());
+            intent.putExtra(DetailActivity.EXTRA_BIAS, card.getBias());
+            intent.putExtra(DetailActivity.EXTRA_TIMESTAMP, card.getTimestamp());
+            intent.putExtra(DetailActivity.EXTRA_BOOKMARKED, card.isBookmarked());
+            intent.putExtra(DetailActivity.EXTRA_FULL_TEXT, card.getFullText());
+            intent.putExtra(DetailActivity.EXTRA_TAKEAWAYS, card.getKeyTakeaways());
+            intent.putExtra(DetailActivity.EXTRA_LEVELS, card.getLevels());
+            context.startActivity(intent);
         });
     }
 
@@ -77,17 +93,16 @@ public class CardSwipeAdapter extends RecyclerView.Adapter<CardSwipeAdapter.Card
     }
 
     static class CardViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle, tvSummary, tvCategory, tvTimestamp;
-        ImageButton btnBookmark;
+        TextView tvTitle, tvSummary, tvSessionBadge, tvBiasTag, tvReadTime;
         View indicatorStrip;
 
         public CardViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvSummary = itemView.findViewById(R.id.tvSummary);
-            tvCategory = itemView.findViewById(R.id.tvCategory);
-            tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
-            btnBookmark = itemView.findViewById(R.id.btnBookmark);
+            tvSessionBadge = itemView.findViewById(R.id.tvSessionBadge);
+            tvBiasTag = itemView.findViewById(R.id.tvBiasTag);
+            tvReadTime = itemView.findViewById(R.id.tvReadTime);
             indicatorStrip = itemView.findViewById(R.id.indicatorStrip);
         }
     }
