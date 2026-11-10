@@ -3,79 +3,65 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/slate_light">
+    android:fitsSystemWindows="true"
+    android:background="@color/app_background">
 
-    <!-- Detail Screen Top App Bar -->
+    <!-- Seamless Detail Toolbar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/detailToolbar"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/slate_primary"
-        android:elevation="4dp"
+        android:background="@color/app_background"
+        android:elevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageButton
-            android:id="@+id/btnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Back"
-            android:src="@android:drawable/ic_menu_revert"
-            app:tint="@android:color/white" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:text="Briefing Detail"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <!-- Top Right Action Icons -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginEnd="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/btnBookmark"
+                android:id="@+id/btnBack"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Bookmark"
-                android:src="@android:drawable/btn_star_big_off"
-                app:tint="@android:color/white" />
+                android:contentDescription="Back"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="@color/text_primary" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="12dp"
+                android:text="Briefing Detail"
+                android:textColor="@color/text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <ImageButton
                 android:id="@+id/btnShare"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="16dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Share"
-                android:src="@android:drawable/ic_menu_share"
-                app:tint="@android:color/white" />
-
-            <ImageButton
-                android:id="@+id/btnFeedback"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Feedback"
-                android:src="@android:drawable/btn_star"
-                app:tint="@android:color/white" />
+                android:src="@drawable/ic_share"
+                app:tint="@color/text_primary" />
 
         </LinearLayout>
+
     </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
+        android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -112,12 +98,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:background="@drawable/bg_category_badge"
+                    android:background="@drawable/bg_bias_pill"
                     android:paddingStart="10dp"
                     android:paddingTop="4dp"
                     android:paddingEnd="10dp"
                     android:paddingBottom="4dp"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/bullish_text"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -130,7 +116,7 @@
                     android:id="@+id/tvDetailTimestamp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#64748B"
+                    android:textColor="@color/text_secondary"
                     android:textSize="12sp" />
 
             </LinearLayout>
@@ -141,7 +127,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:textColor="#0F172A"
+                android:textColor="@color/text_primary"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -151,7 +137,7 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                android:background="#CBD5E1" />
+                android:background="@color/divider_color" />
 
             <!-- Full-length Description Paragraphs -->
             <TextView
@@ -159,46 +145,81 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lineSpacingExtra="6dp"
-                android:textColor="#334155"
+                android:textColor="@color/subtitle_text"
                 android:textSize="15sp" />
 
-            <!-- Key Takeaways Section -->
-            <TextView
+            <!-- Key Takeaways Card Container (Blue Theme) -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="💡 Key Takeaways"
-                android:textColor="#0F172A"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                app:cardBackgroundColor="@color/takeaways_bg"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="1dp"
+                app:strokeColor="@color/takeaways_stroke"
+                app:strokeWidth="1dp">
 
-            <TextView
-                android:id="@+id/tvDetailTakeaways"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="💡 Key Takeaways"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:id="@+id/layoutTakeawaysContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="vertical" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Support & Resistance Levels Card Container (Green Theme) -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:lineSpacingExtra="4dp"
-                android:textColor="#334155"
-                android:textSize="14sp" />
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@color/levels_bg"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="1dp"
+                app:strokeColor="@color/levels_stroke"
+                app:strokeWidth="1dp">
 
-            <!-- Support & Resistance Levels Section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="🎯 Key Support &amp; Resistance Levels"
-                android:textColor="#0F172A"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-            <TextView
-                android:id="@+id/tvDetailLevels"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:lineSpacingExtra="4dp"
-                android:textColor="#334155"
-                android:textSize="14sp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🎯 Key Support &amp; Resistance Levels"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:id="@+id/layoutLevelsContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="vertical" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </ScrollView>

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import in.market.deltabrief.R;
 import in.market.deltabrief.data.local.CardEntity;
@@ -39,6 +40,8 @@ public class SessionNewsAdapter extends RecyclerView.Adapter<SessionNewsAdapter.
     @Override
     public void onBindViewHolder(@NonNull SessionNewsViewHolder holder, int position) {
         CardEntity card = cards.get(position);
+        Context context = holder.itemView.getContext();
+
         holder.tvTitle.setText(card.getTitle());
         holder.tvSummary.setText(card.getSummaryText());
 
@@ -51,29 +54,28 @@ public class SessionNewsAdapter extends RecyclerView.Adapter<SessionNewsAdapter.
 
         String session = card.getCategory();
         if ("Pre-Market".equalsIgnoreCase(session)) {
-            holder.leftSidePanel.setBackgroundColor(Color.parseColor("#0284C7")); // Blue
+            holder.leftSidePanel.setBackgroundColor(Color.parseColor("#F59E0B")); // Amber
         } else if ("Stabilized".equalsIgnoreCase(session)) {
-            holder.leftSidePanel.setBackgroundColor(Color.parseColor("#16A34A")); // Green
+            holder.leftSidePanel.setBackgroundColor(Color.parseColor("#0D9488")); // Teal
         } else if ("Mid-Day".equalsIgnoreCase(session) || "Pre-Close".equalsIgnoreCase(session)) {
-            holder.leftSidePanel.setBackgroundColor(Color.parseColor("#DC2626")); // Red
+            holder.leftSidePanel.setBackgroundColor(Color.parseColor("#E11D48")); // Red
         } else {
-            holder.leftSidePanel.setBackgroundColor(Color.parseColor("#9333EA")); // Purple
+            holder.leftSidePanel.setBackgroundColor(Color.parseColor("#7C3AED")); // Purple
         }
 
         String bias = card.getBias() != null ? card.getBias().toUpperCase(Locale.ROOT) : "NEUTRAL";
         holder.tvBiasTag.setText(bias);
         if ("BULLISH".equalsIgnoreCase(bias)) {
-            holder.tvBiasTag.setBackgroundColor(Color.parseColor("#16A34A"));
+            holder.tvBiasTag.setTextColor(ContextCompat.getColor(context, R.color.bullish_text));
         } else if ("BEARISH".equalsIgnoreCase(bias)) {
-            holder.tvBiasTag.setBackgroundColor(Color.parseColor("#DC2626"));
+            holder.tvBiasTag.setTextColor(ContextCompat.getColor(context, R.color.bearish_text));
         } else {
-            holder.tvBiasTag.setBackgroundColor(Color.parseColor("#0284C7"));
+            holder.tvBiasTag.setTextColor(ContextCompat.getColor(context, R.color.trading_blue));
         }
 
         holder.tvReadTime.setText("⏱️ 45 sec read");
 
         holder.itemView.setOnClickListener(v -> {
-            Context context = v.getContext();
             Intent intent = new Intent(context, DetailActivity.class);
             intent.putExtra(DetailActivity.EXTRA_CARD_ID, card.getCardId());
             intent.putExtra(DetailActivity.EXTRA_TITLE, card.getTitle());

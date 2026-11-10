@@ -39,10 +39,18 @@ public class SessionFeedActivity extends AppCompatActivity {
         }
 
         ImageButton btnBack = findViewById(R.id.btnBack);
+        ImageButton btnShare = findViewById(R.id.btnShare);
         TextView tvSessionFeedTitle = findViewById(R.id.tvSessionFeedTitle);
 
         tvSessionFeedTitle.setText(sessionName + " Briefs");
         btnBack.setOnClickListener(v -> finish());
+
+        btnShare.setOnClickListener(v -> {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "Explore " + sessionName + " market briefings on DeltaBrief!");
+            startActivity(Intent.createChooser(shareIntent, "Share Session Briefs"));
+        });
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewSessionFeed);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
