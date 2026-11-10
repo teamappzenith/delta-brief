@@ -1,7 +1,9 @@
 package in.market.deltabrief.ui.main;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +22,6 @@ public class SessionFeedActivity extends AppCompatActivity {
 
     public static final String EXTRA_SESSION_NAME = "extra_session_name";
 
-    private BriefingViewModel viewModel;
     private SessionNewsAdapter adapter;
     private String sessionName;
 
@@ -36,6 +37,17 @@ public class SessionFeedActivity extends AppCompatActivity {
         sessionName = intent.getStringExtra(EXTRA_SESSION_NAME);
         if (sessionName == null) {
             sessionName = "Pre-Market";
+        }
+
+        View rootLayout = findViewById(R.id.rootSessionFeedLayout);
+        if ("Pre-Market".equalsIgnoreCase(sessionName)) {
+            rootLayout.setBackgroundColor(Color.parseColor("#12F59E0B")); // Ambient amber tint
+        } else if ("Stabilized".equalsIgnoreCase(sessionName)) {
+            rootLayout.setBackgroundColor(Color.parseColor("#120D9488")); // Ambient teal tint
+        } else if ("Mid-Day".equalsIgnoreCase(sessionName) || "Pre-Close".equalsIgnoreCase(sessionName)) {
+            rootLayout.setBackgroundColor(Color.parseColor("#12E11D48")); // Ambient red tint
+        } else {
+            rootLayout.setBackgroundColor(Color.parseColor("#127C3AED")); // Ambient purple tint
         }
 
         ImageButton btnBack = findViewById(R.id.btnBack);
@@ -58,7 +70,7 @@ public class SessionFeedActivity extends AppCompatActivity {
         adapter = new SessionNewsAdapter();
         recyclerView.setAdapter(adapter);
 
-        viewModel = new ViewModelProvider(this).get(BriefingViewModel.class);
+        BriefingViewModel viewModel = new ViewModelProvider(this).get(BriefingViewModel.class);
         viewModel.getAllCards().observe(this, cards -> {
             if (cards != null) {
                 List<CardEntity> filteredList = new ArrayList<>();
