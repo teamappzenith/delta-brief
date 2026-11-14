@@ -1,33 +1,28 @@
 package in.market.deltabrief.ui.main;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import in.market.deltabrief.R;
-import in.market.deltabrief.data.local.CardEntity;
-import in.market.deltabrief.model.HubItem;
-import in.market.deltabrief.ui.adapter.HubAdapter;
-import in.market.deltabrief.ui.viewmodel.BriefingViewModel;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private HubAdapter hubAdapter;
-    private final Map<String, Integer> sessionCounts = new HashMap<>();
+    private boolean isLevelsExpanded = true;
+    private boolean isConditionsExpanded = true;
+    private boolean isBriefingsExpanded = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Load and apply saved theme mode on startup
         SharedPreferences prefs = getSharedPreferences("delta_brief_prefs", MODE_PRIVATE);
         int savedTheme = prefs.getInt("pref_theme_mode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         AppCompatDelegate.setDefaultNightMode(savedTheme);
@@ -43,101 +38,95 @@ public class MainActivity extends AppCompatActivity {
             btnHeaderSettings.setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
         }
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewHub);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                return 2; // All session hub cards take full width (1 card per row stack)
-            }
-        });
-        recyclerView.setLayoutManager(gridLayoutManager);
+        // Market Levels Collapse/Expand
+        LinearLayout layoutMarketLevelsHeader = findViewById(R.id.layoutMarketLevelsHeader);
+        LinearLayout layoutMarketLevelsContent = findViewById(R.id.layoutMarketLevelsContent);
+        ImageView imgArrowLevels = findViewById(R.id.imgArrowLevels);
 
-        hubAdapter = new HubAdapter();
-        recyclerView.setAdapter(hubAdapter);
+        layoutMarketLevelsHeader.setOnClickListener(v -> toggleSection(layoutMarketLevelsContent, imgArrowLevels));
 
-        hubAdapter.setOnHubItemClickListener(item -> {
-            if (item.getViewType() == HubItem.TYPE_SESSION_HUB) {
-                Intent intent = new Intent(this, SessionFeedActivity.class);
-                intent.putExtra(SessionFeedActivity.EXTRA_SESSION_NAME, item.getCategory());
-                startActivity(intent);
-            }
-        });
+        // Market Conditions Collapse/Expand
+        LinearLayout layoutMarketConditionsHeader = findViewById(R.id.layoutMarketConditionsHeader);
+        LinearLayout layoutMarketConditionsContent = findViewById(R.id.layoutMarketConditionsContent);
+        ImageView imgArrowConditions = findViewById(R.id.imgArrowConditions);
 
-        BriefingViewModel viewModel = new ViewModelProvider(this).get(BriefingViewModel.class);
-        viewModel.getAllCards().observe(this, cards -> {
-            if (cards != null) {
-                updateSessionCounts(cards);
-                loadHubItems();
-            }
-        });
+        layoutMarketConditionsHeader.setOnClickListener(v -> toggleSection(layoutMarketConditionsContent, imgArrowConditions));
 
-        loadHubItems();
+        // Today's Briefings Collapse/Expand
+        LinearLayout layoutBriefingsHeader = findViewById(R.id.layoutBriefingsHeader);
+        LinearLayout layoutBriefingsContent = findViewById(R.id.layoutBriefingsContent);
+        ImageView imgArrowBriefings = findViewById(R.id.imgArrowBriefings);
+
+        layoutBriefingsHeader.setOnClickListener(v -> toggleSection(layoutBriefingsContent, imgArrowBriefings));
+
+        // Session Clicks
+        findViewById(R.id.rowPreMarket).setOnClickListener(v -> openSessionFeed("Pre-Market"));
+        findViewById(R.id.rowStabilized).setOnClickListener(v -> openSessionFeed("Stabilized"));
+        findViewById(R.id.rowMidDay).setOnClickListener(v -> openSessionFeed("Mid-Day"));
+        findViewById(R.id.rowPostMarket).setOnClickListener(v -> openSessionFeed("Post-Market"));
     }
 
-    private void updateSessionCounts(List<CardEntity> cards) {
-        sessionCounts.clear();
-        for (CardEntity card : cards) {
-            String category = card.getCategory();
-            if (category != null) {
-                sessionCounts.put(category, sessionCounts.getOrDefault(category, 0) + 1);
-            }
+    private void toggleSection(final LinearLayout contentLayout, final ImageView arrowView) {
+        boolean isExpanded = contentLayout.getVisibility() == View.VISIBLE;
+        if (isExpanded) {
+            // Collapse Animation
+            int initialHeight = contentLayout.getMeasuredHeight();
+            ValueAnimator anim = ValueAnimator.ofInt(initialHeight, 0);
+            anim.addUpdateListener(animation -> {
+                int val = (Integer) animation.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = contentLayout.getLayoutParams();
+                layoutParams.height = val;
+                contentLayout.setLayoutParams(layoutParams);
+            });
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    contentLayout.setVisibility(View.GONE);
+                    ViewGroup.LayoutParams layoutParams = contentLayout.getLayoutParams();
+                    layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    contentLayout.setLayoutParams(layoutParams);
+                }
+            });
+            anim.setDuration(250);
+            anim.start();
+            arrowView.setImageResource(R.drawable.ic_chevron_down);
+        } else {
+            // Expand Animation
+            contentLayout.setVisibility(View.VISIBLE);
+            contentLayout.measure(
+                    View.MeasureSpec.makeMeasureSpec(((View) contentLayout.getParent()).getWidth(), View.MeasureSpec.AT_MOST),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+            );
+            int targetHeight = contentLayout.getMeasuredHeight();
+
+            ViewGroup.LayoutParams layoutParams = contentLayout.getLayoutParams();
+            layoutParams.height = 0;
+            contentLayout.setLayoutParams(layoutParams);
+
+            ValueAnimator anim = ValueAnimator.ofInt(0, targetHeight);
+            anim.addUpdateListener(animation -> {
+                int val = (Integer) animation.getAnimatedValue();
+                ViewGroup.LayoutParams params = contentLayout.getLayoutParams();
+                params.height = val;
+                contentLayout.setLayoutParams(params);
+            });
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    ViewGroup.LayoutParams params = contentLayout.getLayoutParams();
+                    params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    contentLayout.setLayoutParams(params);
+                }
+            });
+            anim.setDuration(250);
+            anim.start();
+            arrowView.setImageResource(R.drawable.ic_chevron_up);
         }
     }
 
-    private void loadHubItems() {
-        List<HubItem> hubItems = new ArrayList<>();
-
-        // Full-Width Stack Layout: Only the 4 Session Hub Cards
-        int preMarketCount = sessionCounts.getOrDefault("Pre-Market", 1);
-        int stabilizedCount = sessionCounts.getOrDefault("Stabilized", 1);
-        int midDayCount = sessionCounts.getOrDefault("Mid-Day", 1);
-        int postMarketCount = sessionCounts.getOrDefault("Post-Market", 1);
-
-        hubItems.add(new HubItem(
-                HubItem.TYPE_SESSION_HUB,
-                "Pre-Market",
-                "8:00 AM Release",
-                "Institutional order flow, global cues, SGX Nifty & overnight FII/DII activity.",
-                "Pre-Market",
-                android.R.drawable.ic_menu_today,
-                preMarketCount,
-                "#D97706"
-        ));
-
-        hubItems.add(new HubItem(
-                HubItem.TYPE_SESSION_HUB,
-                "Stabilized",
-                "11:00 AM Release",
-                "Mid-morning IV expansion, straddle adjustments & trend confirmation levels.",
-                "Stabilized",
-                android.R.drawable.ic_menu_day,
-                stabilizedCount,
-                "#059669"
-        ));
-
-        hubItems.add(new HubItem(
-                HubItem.TYPE_SESSION_HUB,
-                "Mid-Day",
-                "2:00 PM Release",
-                "Macroeconomic policy updates, RBI interest rate stance & breakout levels.",
-                "Mid-Day",
-                android.R.drawable.ic_menu_recent_history,
-                midDayCount,
-                "#DC2626"
-        ));
-
-        hubItems.add(new HubItem(
-                HubItem.TYPE_SESSION_HUB,
-                "Post-Market",
-                "4:00 PM Release",
-                "Closing market wrap, IT & Auto momentum and next-day outlook.",
-                "Post-Market",
-                android.R.drawable.ic_menu_month,
-                postMarketCount,
-                "#7C3AED"
-        ));
-
-        hubAdapter.setItems(hubItems);
+    private void openSessionFeed(String sessionName) {
+        Intent intent = new Intent(this, SessionFeedActivity.class);
+        intent.putExtra(SessionFeedActivity.EXTRA_SESSION_NAME, sessionName);
+        startActivity(intent);
     }
 }

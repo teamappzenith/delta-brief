@@ -4,13 +4,11 @@
     android:id="@+id/cardContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginBottom="6dp"
     android:foreground="?attr/selectableItemBackground"
     app:cardBackgroundColor="@color/card_background"
-    app:cardCornerRadius="8dp"
+    app:cardCornerRadius="10dp"
     app:cardElevation="2dp"
     app:strokeColor="@color/card_stroke"
     app:strokeWidth="1dp">
@@ -18,106 +16,101 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <!-- Left Side Panel: 64dp Fixed Width, Date & Time Centered -->
+        <!-- Top Row: Pill Badge + Timestamp & Read Time -->
         <LinearLayout
-            android:id="@+id/leftSidePanel"
-            android:layout_width="64dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="#F59E0B"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="6dp">
-
-            <TextView
-                android:id="@+id/tvPanelDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvPanelTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:gravity="center"
-                android:textColor="#F8FAFC"
-                android:textSize="11sp" />
-
-        </LinearLayout>
-
-        <!-- Right Content Block -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="14dp">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <!-- Bold Headline (15sp) -->
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text_primary"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:maxLines="2"
-                android:ellipsize="end"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <!-- Subtitle Snippet (#94A3B8, 13sp) -->
-            <TextView
-                android:id="@+id/tvSummary"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:textColor="@color/subtitle_text"
-                android:textSize="13sp"
-                android:lineSpacingExtra="2dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvTitle" />
-
-            <!-- Bottom Row: Sentiment Pill Tag + Read Time -->
             <TextView
                 android:id="@+id/tvBiasTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
                 android:background="@drawable/bg_glossy_pill"
                 android:paddingStart="8dp"
                 android:paddingTop="3dp"
                 android:paddingEnd="8dp"
                 android:paddingBottom="3dp"
-                android:textColor="@color/bullish_text"
+                android:textColor="#16A34A"
                 android:textSize="11sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvSummary" />
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
             <TextView
-                android:id="@+id/tvReadTime"
+                android:id="@+id/tvPanelTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="⏱️ 45 sec read"
                 android:textColor="@color/text_secondary"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@id/tvBiasTag"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tvBiasTag" />
+                android:textSize="11sp" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+        <!-- Title & Subtext -->
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:maxLines="2"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/tvSummary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textColor="@color/subtitle_text"
+            android:textSize="13sp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:lineSpacingExtra="2dp" />
+
+        <!-- Thin Horizontal Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:background="@color/divider_color" />
+
+        <!-- Card Footer: Category Label on Left + Read Brief → on Right -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvCategoryLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="MARKET OUTLOOK"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.05" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Read Brief →"
+                android:textColor="#16A34A"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

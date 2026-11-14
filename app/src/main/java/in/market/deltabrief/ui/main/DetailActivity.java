@@ -1,11 +1,8 @@
 package in.market.deltabrief.ui.main;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -42,9 +39,6 @@ public class DetailActivity extends AppCompatActivity {
         String category = intent.getStringExtra(EXTRA_CATEGORY);
         String bias = intent.getStringExtra(EXTRA_BIAS);
         long timestamp = intent.getLongExtra(EXTRA_TIMESTAMP, System.currentTimeMillis());
-        String fullText = intent.getStringExtra(EXTRA_FULL_TEXT);
-        String takeaways = intent.getStringExtra(EXTRA_TAKEAWAYS);
-        String levels = intent.getStringExtra(EXTRA_LEVELS);
 
         ImageButton btnBack = findViewById(R.id.btnBack);
         ImageButton btnShare = findViewById(R.id.btnShare);
@@ -53,32 +47,21 @@ public class DetailActivity extends AppCompatActivity {
         TextView tvDetailBias = findViewById(R.id.tvDetailBias);
         TextView tvDetailTimestamp = findViewById(R.id.tvDetailTimestamp);
         TextView tvDetailTitle = findViewById(R.id.tvDetailTitle);
-        TextView tvDetailFullText = findViewById(R.id.tvDetailFullText);
-        LinearLayout layoutTakeawaysContainer = findViewById(R.id.layoutTakeawaysContainer);
-        LinearLayout layoutLevelsContainer = findViewById(R.id.layoutLevelsContainer);
+        TextView tvDetailSummary = findViewById(R.id.tvDetailSummary);
 
         btnBack.setOnClickListener(v -> finish());
 
         btnShare.setOnClickListener(v -> {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
-            String shareMessage = "DeltaBrief - " + title + "\n\n" + (fullText != null ? fullText : summary) + "\n\nDownload DeltaBrief App!";
+            String shareMessage = "DeltaBrief - " + (title != null ? title : "Market Briefing") + "\n\n" + (summary != null ? summary : "") + "\n\nDownload DeltaBrief App!";
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
             startActivity(Intent.createChooser(shareIntent, "Share Briefing"));
         });
 
-        tvDetailSession.setText(category != null ? category.toUpperCase(Locale.ROOT) : "SESSION");
-        if ("Pre-Market".equalsIgnoreCase(category)) {
-            tvDetailSession.setBackgroundResource(R.drawable.bg_gradient_premarket);
-        } else if ("Stabilized".equalsIgnoreCase(category)) {
-            tvDetailSession.setBackgroundResource(R.drawable.bg_gradient_stabilized);
-        } else if ("Mid-Day".equalsIgnoreCase(category) || "Pre-Close".equalsIgnoreCase(category)) {
-            tvDetailSession.setBackgroundResource(R.drawable.bg_gradient_midday);
-        } else {
-            tvDetailSession.setBackgroundResource(R.drawable.bg_gradient_postmarket);
-        }
+        tvDetailSession.setText(category != null ? category.toUpperCase(Locale.ROOT) : "PRE-MARKET");
 
-        String biasText = bias != null ? bias.toUpperCase(Locale.ROOT) : "NEUTRAL";
+        String biasText = bias != null ? bias.toUpperCase(Locale.ROOT) : "BULLISH";
         tvDetailBias.setText(biasText);
         if ("BULLISH".equalsIgnoreCase(biasText)) {
             tvDetailBias.setTextColor(ContextCompat.getColor(this, R.color.bullish_text));
@@ -88,47 +71,19 @@ public class DetailActivity extends AppCompatActivity {
             tvDetailBias.setTextColor(ContextCompat.getColor(this, R.color.trading_blue));
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("h:mm a", Locale.getDefault());
         tvDetailTimestamp.setText(sdf.format(new Date(timestamp)));
 
-        tvDetailTitle.setText(title);
-        tvDetailFullText.setText(fullText != null ? fullText : summary);
-
-        populateDistinctRows(layoutTakeawaysContainer, takeaways != null && !takeaways.isEmpty() ? takeaways : "• Stay updated with real-time market trends.\n• Practice disciplined risk management.");
-        populateDistinctRows(layoutLevelsContainer, levels != null && !levels.isEmpty() ? levels : "• Key Pivot Support: Nifty 22,200 | Resistance: 22,500");
-    }
-
-    private void populateDistinctRows(LinearLayout container, String rawText) {
-        container.removeAllViews();
-        if (rawText == null || rawText.isEmpty()) {
-            return;
+        if (title != null && !title.isEmpty()) {
+            tvDetailTitle.setText(title);
+        } else {
+            tvDetailTitle.setText("Nifty & Bank Nifty Set for a Strong Opening");
         }
-        String[] lines = rawText.split("\n");
-        for (int i = 0; i < lines.length; i++) {
-            String line = lines[i].trim();
-            if (line.isEmpty()) continue;
-            if (line.startsWith("•") || line.startsWith("-") || line.startsWith("💡") || line.startsWith("🎯")) {
-                line = line.substring(1).trim();
-            }
-            if (line.isEmpty()) continue;
 
-            TextView tvRow = new TextView(this);
-            tvRow.setText("•  " + line);
-            tvRow.setTextColor(getResources().getColor(R.color.subtitle_text, null));
-            tvRow.setTextSize(14f);
-            tvRow.setTypeface(null, Typeface.BOLD);
-            tvRow.setPadding(0, 10, 0, 10);
-            container.addView(tvRow);
-
-            if (i < lines.length - 1) {
-                View divider = new View(this);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT, 1);
-                params.setMargins(0, 8, 0, 8);
-                divider.setLayoutParams(params);
-                divider.setBackgroundColor(getResources().getColor(R.color.divider_color, null));
-                container.addView(divider);
-            }
+        if (summary != null && !summary.isEmpty()) {
+            tvDetailSummary.setText(summary);
+        } else {
+            tvDetailSummary.setText("Positive global cues and institutional buying support expectations of a gap-up opening in domestic indices, led by robust FII inflows and stable global crude oil prices.");
         }
     }
 }

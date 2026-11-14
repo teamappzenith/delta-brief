@@ -18,6 +18,8 @@
     <color name="takeaways_stroke">#1E3A8A</color>
     <color name="levels_bg">#062E1F</color>
     <color name="levels_stroke">#065F46</color>
+    <color name="support_box_bg">#062E1F</color>
+    <color name="resistance_box_bg">#301A1A</color>
     <color name="slate_primary">#1E293B</color>
     <color name="slate_dark">#0F172A</color>
     <color name="slate_light">#0A0E17</color>

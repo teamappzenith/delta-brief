@@ -4,8 +4,6 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,12 +43,9 @@ public class HubAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (viewType == HubItem.TYPE_SECTION_HEADER) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_hub_section_header, parent, false);
             return new HeaderViewHolder(view);
-        } else if (viewType == HubItem.TYPE_SESSION_HUB) {
+        } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_session_hub, parent, false);
             return new SessionHubViewHolder(view);
-        } else {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_hub_card, parent, false);
-            return new ToolCardViewHolder(view);
         }
     }
 
@@ -66,53 +61,17 @@ public class HubAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             sessionHolder.tvHubSessionTitle.setText(item.getTitle().toUpperCase(Locale.ROOT));
             sessionHolder.tvHubDescription.setText(item.getDescription());
-            sessionHolder.tvHubReleaseTime.setText("⏱️ " + item.getSubtitle());
+            sessionHolder.tvHubReleaseTime.setText(item.getSubtitle());
 
-            int count = item.getBadgeCount();
-            sessionHolder.tvHubBriefsCount.setText("● " + count + (count == 1 ? " Brief Available" : " Briefs Available"));
-
-            sessionHolder.tvHubSessionTitle.setBackgroundResource(R.drawable.bg_glossy_pill);
-            sessionHolder.tvHubBriefsCount.setBackgroundResource(R.drawable.bg_glossy_pill);
-
-            // Full-Card Gradient Background based on session
-            if ("Pre-Market".equalsIgnoreCase(category)) {
-                sessionHolder.fullCardContainer.setBackgroundResource(R.drawable.bg_gradient_premarket);
-            } else if ("Stabilized".equalsIgnoreCase(category)) {
-                sessionHolder.fullCardContainer.setBackgroundResource(R.drawable.bg_gradient_stabilized);
-            } else if ("Mid-Day".equalsIgnoreCase(category)) {
-                sessionHolder.fullCardContainer.setBackgroundResource(R.drawable.bg_gradient_midday);
-            } else if ("Post-Market".equalsIgnoreCase(category)) {
-                sessionHolder.fullCardContainer.setBackgroundResource(R.drawable.bg_gradient_postmarket);
+            if ("Post-Market".equalsIgnoreCase(category)) {
+                sessionHolder.tvHubStatusBadge.setText("Upcoming");
+                sessionHolder.tvHubStatusBadge.setTextColor(Color.parseColor("#C2410C")); // Orange
             } else {
-                sessionHolder.fullCardContainer.setBackgroundColor(Color.parseColor("#121824"));
+                sessionHolder.tvHubStatusBadge.setText("Published");
+                sessionHolder.tvHubStatusBadge.setTextColor(Color.parseColor("#16A34A")); // Green
             }
 
             sessionHolder.itemView.setOnClickListener(v -> {
-                if (clickListener != null) {
-                    clickListener.onHubItemClick(item);
-                }
-            });
-        } else if (holder instanceof ToolCardViewHolder) {
-            ToolCardViewHolder toolHolder = (ToolCardViewHolder) holder;
-            toolHolder.tvHubTitle.setText(item.getTitle());
-            toolHolder.tvHubSubtitle.setText(item.getSubtitle());
-
-            if (item.getIconResId() != 0) {
-                toolHolder.imgIcon.setImageResource(item.getIconResId());
-            }
-
-            if (item.getColorHex() != null && !item.getColorHex().isEmpty()) {
-                toolHolder.iconBg.setBackgroundColor(Color.parseColor(item.getColorHex()));
-            }
-
-            if (item.getBadgeCount() > 0) {
-                toolHolder.tvBadgeCount.setVisibility(View.VISIBLE);
-                toolHolder.tvBadgeCount.setText(String.valueOf(item.getBadgeCount()));
-            } else {
-                toolHolder.tvBadgeCount.setVisibility(View.GONE);
-            }
-
-            toolHolder.itemView.setOnClickListener(v -> {
                 if (clickListener != null) {
                     clickListener.onHubItemClick(item);
                 }
@@ -135,31 +94,14 @@ public class HubAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     static class SessionHubViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout fullCardContainer;
-        TextView tvHubSessionTitle, tvHubDescription, tvHubReleaseTime, tvHubBriefsCount;
+        TextView tvHubSessionTitle, tvHubStatusBadge, tvHubReleaseTime, tvHubDescription;
 
         public SessionHubViewHolder(@NonNull View itemView) {
             super(itemView);
-            fullCardContainer = itemView.findViewById(R.id.fullCardContainer);
             tvHubSessionTitle = itemView.findViewById(R.id.tvHubSessionTitle);
-            tvHubDescription = itemView.findViewById(R.id.tvHubDescription);
+            tvHubStatusBadge = itemView.findViewById(R.id.tvHubStatusBadge);
             tvHubReleaseTime = itemView.findViewById(R.id.tvHubReleaseTime);
-            tvHubBriefsCount = itemView.findViewById(R.id.tvHubBriefsCount);
-        }
-    }
-
-    static class ToolCardViewHolder extends RecyclerView.ViewHolder {
-        View iconBg;
-        ImageView imgIcon;
-        TextView tvBadgeCount, tvHubTitle, tvHubSubtitle;
-
-        public ToolCardViewHolder(@NonNull View itemView) {
-            super(itemView);
-            iconBg = itemView.findViewById(R.id.iconBg);
-            imgIcon = itemView.findViewById(R.id.imgIcon);
-            tvBadgeCount = itemView.findViewById(R.id.tvBadgeCount);
-            tvHubTitle = itemView.findViewById(R.id.tvHubTitle);
-            tvHubSubtitle = itemView.findViewById(R.id.tvHubSubtitle);
+            tvHubDescription = itemView.findViewById(R.id.tvHubDescription);
         }
     }
 }
