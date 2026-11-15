@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Top Header: Title, Date, Notification Bell -->
+        <!-- Top Header: Title, Date -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,14 +46,6 @@
                     android:textColor="@color/text_secondary"
                     android:textSize="13sp" />
             </LinearLayout>
-
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Notifications"
-                android:src="@android:drawable/ic_lock_silent_mode_off"
-                app:tint="@color/text_primary" />
 
         </LinearLayout>
 
@@ -173,10 +165,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="View briefs →"
-                        android:textColor="#16A34A"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
+                        android:text="›"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="22sp" />
 
                 </LinearLayout>
 
@@ -274,10 +265,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="View briefs →"
-                        android:textColor="#16A34A"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
+                        android:text="›"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="22sp" />
 
                 </LinearLayout>
 
@@ -375,10 +365,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="View briefs →"
-                        android:textColor="#16A34A"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
+                        android:text="›"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="22sp" />
 
                 </LinearLayout>
 
@@ -469,17 +458,16 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="—"
+                        android:text="Expected at 4:00 PM"
                         android:textColor="@color/text_secondary"
                         android:textSize="12sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="View briefs →"
-                        android:textColor="#16A34A"
-                        android:textSize="13sp"
-                        android:textStyle="bold" />
+                        android:text="›"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="22sp" />
 
                 </LinearLayout>
 

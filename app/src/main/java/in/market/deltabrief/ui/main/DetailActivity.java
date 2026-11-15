@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import in.market.deltabrief.R;
 
 import java.text.SimpleDateFormat;
@@ -39,18 +38,13 @@ public class DetailActivity extends AppCompatActivity {
         String category = intent.getStringExtra(EXTRA_CATEGORY);
         String bias = intent.getStringExtra(EXTRA_BIAS);
         long timestamp = intent.getLongExtra(EXTRA_TIMESTAMP, System.currentTimeMillis());
+        String fullText = intent.getStringExtra(EXTRA_FULL_TEXT);
+        String takeaways = intent.getStringExtra(EXTRA_TAKEAWAYS);
 
         ImageButton btnBack = findViewById(R.id.btnBack);
         ImageButton btnShare = findViewById(R.id.btnShare);
 
-        TextView tvDetailSession = findViewById(R.id.tvDetailSession);
-        TextView tvDetailBias = findViewById(R.id.tvDetailBias);
-        TextView tvDetailTimestamp = findViewById(R.id.tvDetailTimestamp);
-        TextView tvDetailTitle = findViewById(R.id.tvDetailTitle);
-        TextView tvDetailSummary = findViewById(R.id.tvDetailSummary);
-
         btnBack.setOnClickListener(v -> finish());
-
         btnShare.setOnClickListener(v -> {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
@@ -59,31 +53,37 @@ public class DetailActivity extends AppCompatActivity {
             startActivity(Intent.createChooser(shareIntent, "Share Briefing"));
         });
 
-        tvDetailSession.setText(category != null ? category.toUpperCase(Locale.ROOT) : "PRE-MARKET");
+        TextView tvDetailToolbarTitle = findViewById(R.id.tvDetailToolbarTitle);
+        TextView tvDetailBias = findViewById(R.id.tvDetailBias);
+        TextView tvDetailTitle = findViewById(R.id.tvDetailTitle);
+        TextView tvDetailTimestamp = findViewById(R.id.tvDetailTimestamp);
+        TextView tvDetailSummary = findViewById(R.id.tvDetailSummary);
+        TextView tvDetailTakeaways = findViewById(R.id.tvDetailTakeaways);
+        TextView tvDetailWhyItMatters = findViewById(R.id.tvDetailWhyItMatters);
 
-        String biasText = bias != null ? bias.toUpperCase(Locale.ROOT) : "BULLISH";
-        tvDetailBias.setText(biasText);
-        if ("BULLISH".equalsIgnoreCase(biasText)) {
-            tvDetailBias.setTextColor(ContextCompat.getColor(this, R.color.bullish_text));
-        } else if ("BEARISH".equalsIgnoreCase(biasText)) {
-            tvDetailBias.setTextColor(ContextCompat.getColor(this, R.color.bearish_text));
-        } else {
-            tvDetailBias.setTextColor(ContextCompat.getColor(this, R.color.trading_blue));
+        Date date = new Date(timestamp);
+        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("d MMMM yyyy", Locale.getDefault());
+
+        String catStr = category != null ? category.toUpperCase(Locale.ROOT) : "PRE-MARKET";
+        tvDetailToolbarTitle.setText(catStr + " · " + timeFormat.format(date));
+
+        String biasStr = bias != null ? bias : "Bullish";
+        if (!biasStr.isEmpty()) {
+            biasStr = biasStr.substring(0, 1).toUpperCase(Locale.ROOT) + biasStr.substring(1).toLowerCase(Locale.ROOT);
+        }
+        tvDetailBias.setText(biasStr);
+
+        tvDetailTitle.setText(title != null ? title : "Pre-Market Equity Briefing: Nifty & BankNifty Open Strong");
+        tvDetailTimestamp.setText(dateFormat.format(date) + " · 2 min read");
+        tvDetailSummary.setText(summary != null ? summary : "Global markets moved higher as major technology stocks gained, supported by optimism around technology spending and expectations of continued economic growth.");
+
+        if (takeaways != null && !takeaways.isEmpty()) {
+            tvDetailTakeaways.setText(takeaways);
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("h:mm a", Locale.getDefault());
-        tvDetailTimestamp.setText(sdf.format(new Date(timestamp)));
-
-        if (title != null && !title.isEmpty()) {
-            tvDetailTitle.setText(title);
-        } else {
-            tvDetailTitle.setText("Nifty & Bank Nifty Set for a Strong Opening");
-        }
-
-        if (summary != null && !summary.isEmpty()) {
-            tvDetailSummary.setText(summary);
-        } else {
-            tvDetailSummary.setText("Positive global cues and institutional buying support expectations of a gap-up opening in domestic indices, led by robust FII inflows and stable global crude oil prices.");
+        if (fullText != null && !fullText.isEmpty()) {
+            tvDetailWhyItMatters.setText(fullText);
         }
     }
 }

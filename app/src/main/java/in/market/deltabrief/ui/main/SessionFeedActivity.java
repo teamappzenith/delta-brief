@@ -1,9 +1,7 @@
 package in.market.deltabrief.ui.main;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,22 +37,11 @@ public class SessionFeedActivity extends AppCompatActivity {
             sessionName = "Pre-Market";
         }
 
-        View rootLayout = findViewById(R.id.rootSessionFeedLayout);
-        if ("Pre-Market".equalsIgnoreCase(sessionName)) {
-            rootLayout.setBackgroundColor(Color.parseColor("#12F59E0B")); // Ambient amber tint
-        } else if ("Stabilized".equalsIgnoreCase(sessionName)) {
-            rootLayout.setBackgroundColor(Color.parseColor("#120D9488")); // Ambient teal tint
-        } else if ("Mid-Day".equalsIgnoreCase(sessionName) || "Pre-Close".equalsIgnoreCase(sessionName)) {
-            rootLayout.setBackgroundColor(Color.parseColor("#12E11D48")); // Ambient red tint
-        } else {
-            rootLayout.setBackgroundColor(Color.parseColor("#127C3AED")); // Ambient purple tint
-        }
-
         ImageButton btnBack = findViewById(R.id.btnBack);
         ImageButton btnShare = findViewById(R.id.btnShare);
-        TextView tvSessionFeedTitle = findViewById(R.id.tvSessionFeedTitle);
+        TextView tvSessionFeedToolbarTitle = findViewById(R.id.tvSessionFeedToolbarTitle);
 
-        tvSessionFeedTitle.setText(sessionName + " Briefs");
+        tvSessionFeedToolbarTitle.setText(sessionName);
         btnBack.setOnClickListener(v -> finish());
 
         btnShare.setOnClickListener(v -> {
@@ -63,6 +50,18 @@ public class SessionFeedActivity extends AppCompatActivity {
             shareIntent.putExtra(Intent.EXTRA_TEXT, "Explore " + sessionName + " market briefings on DeltaBrief!");
             startActivity(Intent.createChooser(shareIntent, "Share Session Briefs"));
         });
+
+        TextView tvSessionOverviewDesc = findViewById(R.id.tvSessionOverviewDesc);
+
+        if ("Pre-Market".equalsIgnoreCase(sessionName)) {
+            tvSessionOverviewDesc.setText("Key overnight developments, global market cues and important events to watch before the opening bell.");
+        } else if ("Stabilized".equalsIgnoreCase(sessionName)) {
+            tvSessionOverviewDesc.setText("Implied volatility expansion, straddle adjustments and trend confirmation levels.");
+        } else if ("Mid-Day".equalsIgnoreCase(sessionName)) {
+            tvSessionOverviewDesc.setText("RBI interest rate stance, sector rotation and afternoon derivative order flow.");
+        } else {
+            tvSessionOverviewDesc.setText("Market closing analysis, FII/DII net data and overnight global index trends.");
+        }
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewSessionFeed);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

@@ -40,18 +40,28 @@ public class SessionNewsAdapter extends RecyclerView.Adapter<SessionNewsAdapter.
         Context context = holder.itemView.getContext();
 
         holder.tvTitle.setText(card.getTitle());
-        holder.tvSummary.setText(card.getSummaryText());
 
         Date date = new Date(card.getTimestamp());
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
-        holder.tvPanelTime.setText(timeFormat.format(date) + " · 45 sec read");
+        holder.tvPanelTime.setText(timeFormat.format(date) + " · 3 min read");
 
-        String bias = card.getBias() != null ? card.getBias().toUpperCase(Locale.ROOT) : "BULLISH";
+        String bias = card.getBias() != null ? card.getBias() : "Neutral";
+        if (!bias.isEmpty()) {
+            bias = bias.substring(0, 1).toUpperCase(Locale.ROOT) + bias.substring(1).toLowerCase(Locale.ROOT);
+        }
         holder.tvBiasTag.setText(bias);
 
         String category = card.getCategory();
         if (category != null) {
-            holder.tvCategoryLabel.setText(category.toUpperCase(Locale.ROOT) + " OUTLOOK");
+            if ("Stabilized".equalsIgnoreCase(category)) {
+                holder.tvCategoryLabel.setText("Options Strategy");
+            } else if ("Pre-Market".equalsIgnoreCase(category)) {
+                holder.tvCategoryLabel.setText("Global Markets");
+            } else if ("Mid-Day".equalsIgnoreCase(category)) {
+                holder.tvCategoryLabel.setText("Macro Policy");
+            } else {
+                holder.tvCategoryLabel.setText("Market Analysis");
+            }
         }
 
         holder.itemView.setOnClickListener(v -> {
@@ -76,14 +86,13 @@ public class SessionNewsAdapter extends RecyclerView.Adapter<SessionNewsAdapter.
     }
 
     static class SessionNewsViewHolder extends RecyclerView.ViewHolder {
-        TextView tvBiasTag, tvPanelTime, tvTitle, tvSummary, tvCategoryLabel;
+        TextView tvBiasTag, tvPanelTime, tvTitle, tvCategoryLabel;
 
         public SessionNewsViewHolder(@NonNull View itemView) {
             super(itemView);
             tvBiasTag = itemView.findViewById(R.id.tvBiasTag);
             tvPanelTime = itemView.findViewById(R.id.tvPanelTime);
             tvTitle = itemView.findViewById(R.id.tvTitle);
-            tvSummary = itemView.findViewById(R.id.tvSummary);
             tvCategoryLabel = itemView.findViewById(R.id.tvCategoryLabel);
         }
     }

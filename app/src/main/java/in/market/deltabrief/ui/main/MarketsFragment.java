@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import in.market.deltabrief.R;
 
 public class MarketsFragment extends Fragment {
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

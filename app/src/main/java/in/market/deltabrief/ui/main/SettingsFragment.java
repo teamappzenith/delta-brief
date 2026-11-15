@@ -1,14 +1,12 @@
 package in.market.deltabrief.ui.main;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -25,27 +23,7 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        TextView optionRateUs = view.findViewById(R.id.optionRateUs);
-        TextView optionShareApp = view.findViewById(R.id.optionShareApp);
-        TextView optionTheme = view.findViewById(R.id.optionTheme);
-        TextView optionAbout = view.findViewById(R.id.optionAbout);
-
-        optionRateUs.setOnClickListener(v -> {
-            try {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + requireContext().getPackageName())));
-            } catch (Exception e) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + requireContext().getPackageName())));
-            }
-        });
-
-        optionShareApp.setOnClickListener(v -> {
-            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, "Download DeltaBrief for fast, snackable trading session briefings: https://play.google.com/store/apps/details?id=" + requireContext().getPackageName());
-            startActivity(Intent.createChooser(shareIntent, "Share DeltaBrief"));
-        });
-
-        optionTheme.setOnClickListener(v -> {
+        view.findViewById(R.id.optionTheme).setOnClickListener(v -> {
             String[] themes = {"Light Theme", "Dark Theme", "System Default"};
             SharedPreferences prefs = requireContext().getSharedPreferences("delta_brief_prefs", Context.MODE_PRIVATE);
             int currentChoice = prefs.getInt(PREF_THEME, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
@@ -70,13 +48,18 @@ public class SettingsFragment extends Fragment {
                     .show();
         });
 
-        optionAbout.setOnClickListener(v -> {
-            new AlertDialog.Builder(requireContext())
-                    .setTitle("About DeltaBrief (v1.0.0)")
-                    .setMessage("DeltaBrief delivers actionable, bite-sized market intelligence across 4 daily trading sessions:\n\n1. Pre-Market (8:00 AM)\n2. Stabilized (11:00 AM)\n3. Mid-Day (2:00 PM)\n4. Post-Market (4:00 PM)\n\nBuilt for modern traders and investors.")
-                    .setPositiveButton("Close", null)
-                    .show();
-        });
+        view.findViewById(R.id.optionNotifications).setOnClickListener(v ->
+                Toast.makeText(requireContext(), "Notifications settings clicked", Toast.LENGTH_SHORT).show());
+        view.findViewById(R.id.optionSchedule).setOnClickListener(v ->
+                Toast.makeText(requireContext(), "Briefing Schedule clicked", Toast.LENGTH_SHORT).show());
+        view.findViewById(R.id.optionLanguage).setOnClickListener(v ->
+                Toast.makeText(requireContext(), "Language settings clicked", Toast.LENGTH_SHORT).show());
+        view.findViewById(R.id.optionProfile).setOnClickListener(v ->
+                Toast.makeText(requireContext(), "Profile clicked", Toast.LENGTH_SHORT).show());
+        view.findViewById(R.id.optionPrivacy).setOnClickListener(v ->
+                Toast.makeText(requireContext(), "Privacy Policy clicked", Toast.LENGTH_SHORT).show());
+        view.findViewById(R.id.optionTerms).setOnClickListener(v ->
+                Toast.makeText(requireContext(), "Terms and Conditions clicked", Toast.LENGTH_SHORT).show());
 
         return view;
     }
