@@ -128,7 +128,7 @@
                 android:layout_marginBottom="16dp"
                 android:background="@color/divider_color" />
 
-            <!-- Summary Section -->
+            <!-- Summary Section (Holding full description) -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -142,8 +142,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:lineSpacingExtra="4dp"
-                android:text="Global markets moved higher as major technology stocks gained, supported by optimism around technology spending and expectations of continued economic growth."
+                android:lineSpacingExtra="5dp"
                 android:textColor="@color/subtitle_text"
                 android:textSize="14sp" />
 
@@ -170,34 +169,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:lineSpacingExtra="6dp"
-                android:text="• Technology stocks led the broader market gains.\n• Investor sentiment improved amid optimism around corporate earnings.\n• Global market movements could influence Asian markets in the next trading session."
-                android:textColor="@color/subtitle_text"
-                android:textSize="14sp" />
-
-            <!-- Divider Line -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@color/divider_color" />
-
-            <!-- Why It Matters Section -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Why It Matters"
-                android:textColor="@color/text_primary"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvDetailWhyItMatters"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:lineSpacingExtra="4dp"
-                android:text="Strong US market performance can influence investor sentiment across global markets, including India."
                 android:textColor="@color/subtitle_text"
                 android:textSize="14sp" />
 

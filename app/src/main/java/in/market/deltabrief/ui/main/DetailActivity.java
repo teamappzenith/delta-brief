@@ -59,7 +59,6 @@ public class DetailActivity extends AppCompatActivity {
         TextView tvDetailTimestamp = findViewById(R.id.tvDetailTimestamp);
         TextView tvDetailSummary = findViewById(R.id.tvDetailSummary);
         TextView tvDetailTakeaways = findViewById(R.id.tvDetailTakeaways);
-        TextView tvDetailWhyItMatters = findViewById(R.id.tvDetailWhyItMatters);
 
         Date date = new Date(timestamp);
         SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a", Locale.getDefault());
@@ -76,14 +75,12 @@ public class DetailActivity extends AppCompatActivity {
 
         tvDetailTitle.setText(title != null ? title : "Pre-Market Equity Briefing: Nifty & BankNifty Open Strong");
         tvDetailTimestamp.setText(dateFormat.format(date) + " · 2 min read");
-        tvDetailSummary.setText(summary != null ? summary : "Global markets moved higher as major technology stocks gained, supported by optimism around technology spending and expectations of continued economic growth.");
+
+        String contentToDisplay = (fullText != null && !fullText.isEmpty()) ? fullText : (summary != null ? summary : "Global markets moved higher as major technology stocks gained, supported by optimism around technology spending and expectations of continued economic growth.");
+        tvDetailSummary.setText(contentToDisplay);
 
         if (takeaways != null && !takeaways.isEmpty()) {
             tvDetailTakeaways.setText(takeaways);
-        }
-
-        if (fullText != null && !fullText.isEmpty()) {
-            tvDetailWhyItMatters.setText(fullText);
         }
     }
 }
